@@ -14,7 +14,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/api/users/signup")
+    @PostMapping("/api/users")
     public ResponseEntity<UserSignupResponse> signup(@RequestBody UserSignupRequest request) {
         User user = request.toUser();
         User savedUser = userService.signup(user);
