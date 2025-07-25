@@ -1,5 +1,6 @@
 package io.github.hyungjun.backend.user;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,8 +15,10 @@ public class UserController {
     }
 
     @PostMapping("/api/users/signup")
-    public UserSignupResponse signup(@RequestBody UserSignupRequest request) {
-        return userService.signup(request);
+    public ResponseEntity<UserSignupResponse> signup(@RequestBody UserSignupRequest request) {
+        User user = request.toUser();
+        User savedUser = userService.signup(user);
+        return ResponseEntity.ok(new UserSignupResponse(savedUser));
     }
 }
 

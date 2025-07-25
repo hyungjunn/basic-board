@@ -11,22 +11,20 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserSignupResponse signup(UserSignupRequest request) {
-        validateEmailNotDuplicated(request);
-        validateNickNameNotDuplicated(request);
-        User user = request.toUser();
-        userRepository.save(user);
-        return new UserSignupResponse(user);
+    public User signup(User user) {
+        validateEmailNotDuplicated(user.getEmail());
+        validateNickNameNotDuplicated(user.getNickname());
+        return userRepository.save(user);
     }
 
-    private void validateNickNameNotDuplicated(UserSignupRequest request) {
-        if (userRepository.existsByNickname(request.nickname())) {
+    private void validateNickNameNotDuplicated(String nickname) {
+        if (userRepository.existsByNickname(nickname)) {
             throw new IllegalArgumentException("Nickname already exists");
         }
     }
 
-    private void validateEmailNotDuplicated(UserSignupRequest request) {
-        if (userRepository.existsByEmail(request.email())) {
+    private void validateEmailNotDuplicated(String email) {
+        if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("Email already exists");
         }
     }
