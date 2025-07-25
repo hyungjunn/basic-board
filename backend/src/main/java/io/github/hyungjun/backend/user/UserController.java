@@ -21,17 +21,5 @@ public class UserController {
         User user = userRepository.save(request.toUser());
         return new UserSignupResponse(user);
     }
-
-    record UserSignupRequest(String email, String password, String nickname) {
-        public User toUser() {
-            return new User(email, password, nickname);
-        }
-    }
-
-    record UserSignupResponse(String email, String password, String nickname) {
-        public UserSignupResponse(User user) {
-            this(user.getEmail(), user.getPassword(), user.getNickname());
-        }
-    }
 }
 
