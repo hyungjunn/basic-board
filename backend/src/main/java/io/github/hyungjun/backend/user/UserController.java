@@ -7,19 +7,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping("/api/users/signup")
     public UserSignupResponse signup(@RequestBody UserSignupRequest request) {
-        if (userRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("Email already exists");
-        }
-        User user = userRepository.save(request.toUser());
-        return new UserSignupResponse(user);
+        return userService.signup(request);
     }
 }
 
