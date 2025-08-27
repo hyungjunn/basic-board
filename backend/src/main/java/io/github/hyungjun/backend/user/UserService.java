@@ -1,5 +1,6 @@
 package io.github.hyungjun.backend.user;
 
+import io.github.hyungjun.backend.exception.EmailAlreadyExistsException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,7 +26,7 @@ public class UserService {
 
     private void validateEmailNotDuplicated(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
         }
     }
 }

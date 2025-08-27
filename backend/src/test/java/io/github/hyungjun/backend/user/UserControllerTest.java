@@ -1,6 +1,7 @@
 package io.github.hyungjun.backend.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.hyungjun.backend.exception.EmailAlreadyExistsException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -49,5 +50,24 @@ class UserControllerTest {
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         verify(userService).signup(captor.capture());
         assertThat(captor.getValue().getEmail()).isEqualTo(request.email());
+    }
+
+    @Test
+    @DisplayName("회원가입 중 이미 존재하는 이메일로 인해 실패하면 409 Conflict를 반환한다")
+    void signup_validationFailure() throws Exception {
+        UserSignupRequest invalidRequest = new UserSignupRequest(
+                "test@email.com", "password1234", "nickname"
+        );
+
+        given(userService.signup(any(User.class)))
+                .willThrow(new EmailAlreadyExistsException("Email already exists"));
+
+        assertThat(mockMvc.post().uri("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequest)))
+                .hasStatus(409)
+                .hasHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .bodyJson()
+                .hasPathSatisfying("$.message", p -> assertThat(p).isEqualTo("Email already exists"));
     }
 }
