@@ -1,5 +1,6 @@
 package io.github.hyungjun.backend.user;
 
+import io.github.hyungjun.backend.exception.EmailAlreadyExistsException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ class UserServiceTest {
         User user = new User("test@email.com", "password1234", "nickname");
 
         Assertions.assertThatThrownBy(() -> userService.signup(user))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(EmailAlreadyExistsException.class)
                 .hasMessage("Email already exists");;
     }
 
