@@ -1,7 +1,9 @@
 package io.github.hyungjun.backend.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.hyungjun.backend.exception.EmailAlreadyExistsException;
+import io.github.hyungjun.backend.exception.NicknameAlreadyExistsException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -30,7 +32,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("회원가입 API가 정상적으로 동작하여 사용자가 성공적으로 등록된다")
-    void signup_success() throws Exception {
+    void signup_success() throws JsonProcessingException {
         UserSignupRequest request = new UserSignupRequest(
                 "test@email.com", "password1234", "nickname"
         );
@@ -54,7 +56,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("회원가입 중 이미 존재하는 이메일로 인해 실패하면 409 Conflict를 반환한다")
-    void signup_validationFailure() throws Exception {
+    void signup_emailValidationFailure() throws JsonProcessingException {
         UserSignupRequest invalidRequest = new UserSignupRequest(
                 "test@email.com", "password1234", "nickname"
         );
@@ -69,5 +71,25 @@ class UserControllerTest {
                 .hasHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .bodyJson()
                 .hasPathSatisfying("$.message", p -> assertThat(p).isEqualTo("Email already exists"));
+    }
+
+    @Test
+    @DisplayName("회원가입 중 이미 존재하는 닉네임으로 인해 실패하면 409 Conflict를 반환한다")
+    void signup_nicknameValidationFailure() throws JsonProcessingException {
+        UserSignupRequest invalidRequest = new UserSignupRequest(
+                "test@email.com", "password1234", "nickname"
+        );
+
+        given(userService.signup(any(User.class)))
+                .willThrow(new NicknameAlreadyExistsException("Nickname already exists"));
+
+        assertThat(mockMvc.post().uri("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequest)))
+                .hasStatus(409)
+                .hasHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .bodyJson()
+                .hasPathSatisfying("$.message", p -> assertThat(p).isEqualTo("Nickname already exists"));
+
     }
 }

@@ -1,6 +1,7 @@
 package io.github.hyungjun.backend.user;
 
 import io.github.hyungjun.backend.exception.EmailAlreadyExistsException;
+import io.github.hyungjun.backend.exception.NicknameAlreadyExistsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +23,7 @@ public class UserService {
 
     private void validateNickNameNotDuplicated(String nickname) {
         if (userRepository.existsByNickname(nickname)) {
-            throw new IllegalArgumentException("Nickname already exists");
+            throw new NicknameAlreadyExistsException("Nickname already exists");
         }
     }
 

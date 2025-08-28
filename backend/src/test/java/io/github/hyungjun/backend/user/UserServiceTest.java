@@ -1,12 +1,13 @@
 package io.github.hyungjun.backend.user;
 
 import io.github.hyungjun.backend.exception.EmailAlreadyExistsException;
-import org.assertj.core.api.Assertions;
+import io.github.hyungjun.backend.exception.NicknameAlreadyExistsException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
@@ -37,7 +38,7 @@ class UserServiceTest {
         UserService userService = new UserService(mockRepo);
         User user = new User("test@email.com", "password1234", "nickname");
 
-        Assertions.assertThatThrownBy(() -> userService.signup(user))
+        assertThatThrownBy(() -> userService.signup(user))
                 .isInstanceOf(EmailAlreadyExistsException.class)
                 .hasMessage("Email already exists");;
     }
@@ -51,8 +52,8 @@ class UserServiceTest {
         UserService userService = new UserService(mockRepo);
         User user = new User("test@email.com", "password1234", "nickname");
 
-        Assertions.assertThatThrownBy(() -> userService.signup(user))
-                .isInstanceOf(IllegalArgumentException.class)
+        assertThatThrownBy(() -> userService.signup(user))
+                .isInstanceOf(NicknameAlreadyExistsException.class)
                 .hasMessage("Nickname already exists");
     }
 }
