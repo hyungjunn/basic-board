@@ -11,34 +11,34 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
-class UserServiceTest {
+class MemberServiceTest {
 
     @Test
     @DisplayName("회원가입 성공")
     void signup_success() {
-        UserRepository mockRepo = Mockito.mock(UserRepository.class);
+        MemberRepository mockRepo = Mockito.mock(MemberRepository.class);
         Mockito.when(mockRepo.existsByEmail(anyString())).thenReturn(false);
         Mockito.when(mockRepo.existsByNickname(anyString())).thenReturn(false);
-        Mockito.when(mockRepo.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
+        Mockito.when(mockRepo.save(any(Member.class))).thenAnswer(i -> i.getArgument(0));
 
-        UserService userService = new UserService(mockRepo);
-        User user = new User("test@email.com", "password1234", "nickname");
-        User savedUser = userService.signup(user);
+        MemberService memberService = new MemberService(mockRepo);
+        Member member = new Member("test@email.com", "password1234", "nickname");
+        Member savedMember = memberService.signup(member);
 
-        assertThat(user.getEmail()).isEqualTo(savedUser.getEmail());
-        assertThat(user.getNickname()).isEqualTo(savedUser.getNickname());
+        assertThat(member.getEmail()).isEqualTo(savedMember.getEmail());
+        assertThat(member.getNickname()).isEqualTo(savedMember.getNickname());
     }
 
     @Test
     @DisplayName("회원가입 실패 - 이메일 중복")
     void duplicateEmail_throwsException() {
-        UserRepository mockRepo = Mockito.mock(UserRepository.class);
+        MemberRepository mockRepo = Mockito.mock(MemberRepository.class);
         Mockito.when(mockRepo.existsByEmail("test@email.com")).thenReturn(true);
 
-        UserService userService = new UserService(mockRepo);
-        User user = new User("test@email.com", "password1234", "nickname");
+        MemberService memberService = new MemberService(mockRepo);
+        Member member = new Member("test@email.com", "password1234", "nickname");
 
-        assertThatThrownBy(() -> userService.signup(user))
+        assertThatThrownBy(() -> memberService.signup(member))
                 .isInstanceOf(EmailAlreadyExistsException.class)
                 .hasMessage("Email already exists");;
     }
@@ -46,13 +46,13 @@ class UserServiceTest {
     @Test
     @DisplayName("회원가입 실패 - 닉네임 중복")
     void duplicateNickname_throwsException() {
-        UserRepository mockRepo = Mockito.mock(UserRepository.class);
+        MemberRepository mockRepo = Mockito.mock(MemberRepository.class);
         Mockito.when(mockRepo.existsByNickname("nickname")).thenReturn(true);
 
-        UserService userService = new UserService(mockRepo);
-        User user = new User("test@email.com", "password1234", "nickname");
+        MemberService memberService = new MemberService(mockRepo);
+        Member member = new Member("test@email.com", "password1234", "nickname");
 
-        assertThatThrownBy(() -> userService.signup(user))
+        assertThatThrownBy(() -> memberService.signup(member))
                 .isInstanceOf(NicknameAlreadyExistsException.class)
                 .hasMessage("Nickname already exists");
     }

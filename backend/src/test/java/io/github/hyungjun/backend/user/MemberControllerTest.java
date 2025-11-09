@@ -18,14 +18,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-@WebMvcTest(UserController.class)
-class UserControllerTest {
+@WebMvcTest(MemberController.class)
+class MemberControllerTest {
 
     @Autowired
     private MockMvcTester mockMvc;
 
     @MockitoBean
-    private UserService userService;
+    private MemberService memberService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -33,38 +33,38 @@ class UserControllerTest {
     @Test
     @DisplayName("회원가입 API가 정상적으로 동작하여 사용자가 성공적으로 등록된다")
     void signup_success() throws JsonProcessingException {
-        UserSignupRequest request = new UserSignupRequest(
+        SignupRequest request = new SignupRequest(
                 "test@email.com", "password1234", "nickname"
         );
-        User savedUser = new User(1L, "test@email.com", "password1234", "nickname");
-        given(userService.signup(any(User.class))).willReturn(savedUser);
+        Member savedMember = new Member(1L, "test@email.com", "password1234", "nickname");
+        given(memberService.signup(any(Member.class))).willReturn(savedMember);
 
-        assertThat(mockMvc.post().uri("/api/users")
+        assertThat(mockMvc.post().uri("/api/v1/members")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .hasStatusOk()
                 .hasHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .bodyJson()
-                .hasPathSatisfying("$.userId", p -> assertThat(p).isEqualTo(1))
+                .hasPathSatisfying("$.memberId", p -> assertThat(p).isEqualTo(1))
                 .hasPathSatisfying("$.email", p -> assertThat(p).isEqualTo(request.email()))
                 .hasPathSatisfying("$.nickname", p -> assertThat(p).isEqualTo(request.nickname()));
 
-        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
-        verify(userService).signup(captor.capture());
+        ArgumentCaptor<Member> captor = ArgumentCaptor.forClass(Member.class);
+        verify(memberService).signup(captor.capture());
         assertThat(captor.getValue().getEmail()).isEqualTo(request.email());
     }
 
     @Test
     @DisplayName("회원가입 중 이미 존재하는 이메일로 인해 실패하면 409 Conflict를 반환한다")
     void signup_emailValidationFailure() throws JsonProcessingException {
-        UserSignupRequest invalidRequest = new UserSignupRequest(
+        SignupRequest invalidRequest = new SignupRequest(
                 "test@email.com", "password1234", "nickname"
         );
 
-        given(userService.signup(any(User.class)))
+        given(memberService.signup(any(Member.class)))
                 .willThrow(new EmailAlreadyExistsException("Email already exists"));
 
-        assertThat(mockMvc.post().uri("/api/users")
+        assertThat(mockMvc.post().uri("/api/v1/members")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalidRequest)))
                 .hasStatus(409)
@@ -76,14 +76,14 @@ class UserControllerTest {
     @Test
     @DisplayName("회원가입 중 이미 존재하는 닉네임으로 인해 실패하면 409 Conflict를 반환한다")
     void signup_nicknameValidationFailure() throws JsonProcessingException {
-        UserSignupRequest invalidRequest = new UserSignupRequest(
+        SignupRequest invalidRequest = new SignupRequest(
                 "test@email.com", "password1234", "nickname"
         );
 
-        given(userService.signup(any(User.class)))
+        given(memberService.signup(any(Member.class)))
                 .willThrow(new NicknameAlreadyExistsException("Nickname already exists"));
 
-        assertThat(mockMvc.post().uri("/api/users")
+        assertThat(mockMvc.post().uri("/api/v1/members")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalidRequest)))
                 .hasStatus(409)

@@ -6,29 +6,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class UserService {
+public class MemberService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Transactional
-    public User signup(User user) {
-        validateEmailNotDuplicated(user.getEmail());
-        validateNickNameNotDuplicated(user.getNickname());
-        return userRepository.save(user);
+    public Member signup(Member member) {
+        validateEmailNotDuplicated(member.getEmail());
+        validateNickNameNotDuplicated(member.getNickname());
+        return memberRepository.save(member);
     }
 
     private void validateNickNameNotDuplicated(String nickname) {
-        if (userRepository.existsByNickname(nickname)) {
+        if (memberRepository.existsByNickname(nickname)) {
             throw new NicknameAlreadyExistsException("Nickname already exists");
         }
     }
 
     private void validateEmailNotDuplicated(String email) {
-        if (userRepository.existsByEmail(email)) {
+        if (memberRepository.existsByEmail(email)) {
             throw new EmailAlreadyExistsException("Email already exists");
         }
     }

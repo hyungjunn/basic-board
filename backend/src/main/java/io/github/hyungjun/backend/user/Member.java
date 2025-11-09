@@ -8,32 +8,29 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 
 @Entity
-@Table(name = "users")
+@Table(name = "members")
 @Getter
-public class User {
+public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String email;
-
     private String password;
-
     private String nickname;
 
-    public User(Long id, String email, String password, String nickname) {
+    protected Member() {}
+
+    public Member(String email, String password, String nickname) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+    }
+
+    public Member(Long id, String email, String password, String nickname) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-    }
-
-    public User(String email, String password, String nickname) {
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-    }
-
-    public User() {
     }
 }
