@@ -27,6 +27,10 @@ build/
 !gradlew.bat
 !gradle/wrapper/gradle-wrapper.jar
 !gradle/wrapper/gradle-wrapper.properties
+# build, build 2, build-anything
+**/build*/
+# target, target 2, etc
+**/target*/
 
 # Logs / Temp
 logs/
