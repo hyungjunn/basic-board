@@ -2,6 +2,7 @@ package io.github.hyungjun.backend.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.hyungjun.backend.SecurityConfig;
 import io.github.hyungjun.backend.exception.EmailAlreadyExistsException;
 import io.github.hyungjun.backend.exception.NicknameAlreadyExistsException;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
@@ -19,16 +21,12 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @WebMvcTest(MemberController.class)
+@Import(SecurityConfig.class)
 class MemberControllerTest {
 
-    @Autowired
-    private MockMvcTester mockMvc;
-
-    @MockitoBean
-    private MemberService memberService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private MockMvcTester mockMvc;
+    @Autowired private ObjectMapper objectMapper;
+    @MockitoBean private MemberService memberService;
 
     @Test
     @DisplayName("회원가입 API가 정상적으로 동작하여 사용자가 성공적으로 등록된다")

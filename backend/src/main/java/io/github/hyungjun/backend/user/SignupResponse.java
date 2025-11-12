@@ -1,7 +1,7 @@
 package io.github.hyungjun.backend.user;
 
-public record SignupResponse(Long memberId, String email, String password, String nickname) {
+public record SignupResponse(Long memberId, String email, String nickname) {
     public SignupResponse(Member member) {
-        this(member.getId(), member.getEmail(), member.getPassword(), member.getNickname());
+        this(member.getId(), member.getEmail(), member.getNickname());
     }
 }

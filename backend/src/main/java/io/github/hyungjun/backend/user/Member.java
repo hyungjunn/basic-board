@@ -19,6 +19,10 @@ public class Member {
     private String password;
     private String nickname;
 
+    public static Member signup(String email, String encodedPassword, String nickname) {
+        return new Member(email, encodedPassword, nickname);
+    }
+
     protected Member() {}
 
     public Member(String email, String password, String nickname) {

@@ -1,19 +1,68 @@
-# IntelliJ IDEA
-.idea/
-*.iml
-out/
-
-# Operating system files
+# OS
 .DS_Store
 Thumbs.db
 
-# Default ignored files
-/shelf/
-/workspace.xml
-# Editor-based HTTP Client requests
-/httpRequests/
-# Environment-dependent path to Maven home directory
-/mavenHomeManager.xml
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+out/
+
+# Java / Build
+*.class
+
+# Maven
+target/
+!mvnw
+!mvnw.cmd
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+# Gradle
+.gradle/
+build/
+!gradlew
+!gradlew.bat
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# Logs / Temp
+logs/
+*.log
+spring.log
+hs_err_pid*
+replay_pid*
+*.pid
+*.tmp
+tmp/
+
+# Environment / Secrets
+.env
+.env.*
+application-*.yml
+application-*.yaml
+application-*.properties
+!application.yml.example
+!application.yaml.example
+!application.properties.example
+
+# Frontend (optional)
+node_modules/
+dist/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
+*.swp
+*.swo
+*.bak
+
+# Eclipse (optional)
+.classpath
+.project
+.settings/
+
