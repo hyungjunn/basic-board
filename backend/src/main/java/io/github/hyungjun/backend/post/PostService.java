@@ -47,7 +47,7 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
 
         post.increaseViewCount();
-        postRepository.save(post);
+        // JPA 더티 체킹으로 트랜잭션 커밋 시 자동 UPDATE
 
         try {
             // 추가 지연 - 트랜잭션 커밋 전 대기
